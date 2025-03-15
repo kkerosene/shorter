@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using shorter.client.Models;
+using shorter.client.Data.ViewModels;
 
 namespace shorter.client.Controllers;
 
@@ -15,17 +15,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var newUrl = new PostUrlVM();
+
+        return View(newUrl);
     }
 
-    public IActionResult Privacy()
+    public IActionResult Shorten()
     {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return RedirectToAction("Index");
     }
 }

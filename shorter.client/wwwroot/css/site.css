@@ -20,3 +20,24 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.Landing {
+    background-color: #f8f9fa; /* Light gray background */
+    min-height: 100vh; /* Full height */
+    display: flex;
+    align-items: center;
+}
+
+#space5p {
+    padding: 5px;
+}
+
+.form-header {
+    font-size: 24px;
+    font-weight: 600;
+    padding-bottom: 20px;
+}
+
+.form-group {
+    font-weight: 600;
+}

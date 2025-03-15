@@ -1,0 +1,59 @@
+﻿@model LoginVM;
+
+@{
+	ViewData["Title"] = "log in";
+}
+<div class="row">
+	<div class="col-md-6 offset-md-3">
+		<h4 class="form-header">log in</h4>
+
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+				<form
+					asp-controller="Auth"
+					asp-action="LoginSubmit">
+
+					<div class="form-group mb-3">
+						<label for="emailAddress">email address</label>
+						<input type="email" asp-for="emailAddress"
+						class="form-control" id="emailAddress" />
+					</div>
+
+					<div class="form-group mb-3">
+						<label for="password">password</label>
+						<input type="password" asp-for="password"
+							class="form-control" id="password" />
+					</div>
+
+					@*<button type="submit" class="btn btn-outline-primary mt-2 btn-login">log in</button>*@
+				</form>
+			</div>
+			<button type="submit" onclick="login()" class="btn btn-outline-primary mt-2 btn-login">log in</button>
+		</div>
+	</div>
+</div>
+
+<script>
+
+	function login(){
+		var emailAddress = $("#emailAddress").val();
+		var password = $("#password").val();
+
+		$.ajax({
+			url: '@Url.Action("LoginSubmit", "Auth")',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				EmailAddress: emailAddress,
+				Password: password
+			},
+			success: function(response){
+				console.log("login successful");
+			},
+			error: function(xhr, status, error){
+				console.log("login fail :()")
+			}
+		})
+	}
+
+</script>
