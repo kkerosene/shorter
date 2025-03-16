@@ -1,14 +1,14 @@
-﻿namespace shorter.client.Data.Models
-{
-    public class Url
-    {
-        public int Id { get; set; }
-        public string OriginalLink {  get; set; }
-        public string ShortLink { get; set; }
-        public int TotalClicks { get; set; }
-        public int? UserId { get; set; }
+﻿using shorter.client.Data.Models;
 
-        public DateTime DateCreated { get; set; }
-        public DateTime? DateUpdated { get; set; }
-    }
+public class Url
+{
+    public int Id { get; set; }
+    public string LongUrl { get; set; }
+    public string ShortUrl { get; set; }
+    public string UserId { get; set; }
+    public int TotalClicks { get; set; }
+    public DateTime DateCreated { get; set; }
+
+    // Navigation property to ApplicationUser
+    public ApplicationUser User { get; set; }
 }

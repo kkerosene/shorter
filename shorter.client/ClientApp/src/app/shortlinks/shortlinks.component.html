@@ -1,0 +1,29 @@
+<div class="container mt-4">
+  <h2>All Shortlinks</h2>
+  <table class="table table-striped" *ngIf="shortlinks && shortlinks.length; else empty">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Original URL</th>
+        <th>Short URL</th>
+        <th>Total Clicks</th>
+        <th>Date Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let link of shortlinks">
+        <td>{{ link.id }}</td>
+        <td>{{ link.longUrl }}</td>
+        <td>
+          <!-- You might want to construct the full short URL here if needed -->
+          <a [href]="link.shortUrl" target="_blank">{{ link.shortUrl }}</a>
+        </td>
+        <td>{{ link.totalClicks }}</td>
+        <td>{{ link.dateCreated | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #empty>
+    <p>No shortlinks available.</p>
+  </ng-template>
+</div>

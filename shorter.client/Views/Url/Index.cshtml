@@ -1,57 +1,48 @@
-﻿@model List<GetUrlVM>;
+﻿@model List<UrlVM>
 
 @{
-	ViewData["Title"] = "all shortlinks";
+    ViewData["Title"] = "all shortlinks";
 }
 
 <div class="container">
-	<a class="btn btn-outline-success"
-	asp-controller="Home"
-	asp-action="Index">
-		Add New
-	</a>
+    <a class="btn btn-outline-success"
+       asp-controller="Home"
+       asp-action="Index">
+        create new shortlink
+    </a>
 </div>
 
 <div class="container">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">#</th>
-				<th scope="col">original link</th>
-				<th scope="col">shortened link</th>
-				<th scope="col">no. of clicks</th>
-				<th scope="col">user id</th>
-				<th scope="col">actions</th>
-			</tr>
-		</thead>
-		<tbody>
-
-			@foreach(var url in Model)
-			{
-				<tr>
-					<td>@url.Id</td>
-					<td>@url.OriginalLink</td>
-					<td>@url.ShortLink</td>
-					<td>@url.TotalClicks</td>
-					<td>@url.UserId</td>
-					<td>
-						<a class="btn btn-outline-danger"
-							asp-controller="Url" 
-							asp-action="Remove"
-							asp-route-id="@url.Id">
-							remove shortlink
-						</a>
-
-						<a class="btn btn-outline-danger"
-						   asp-controller="Url"
-						   asp-action="Remove"
-						   asp-route-id="@url.Id">
-							remove with 2 parameters
-						</a>
-					</td>
-				</tr>
-			}
-
-		</tbody>
-	</table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">original link</th>
+                <th scope="col">shortened link</th>
+                <th scope="col">no. of clicks</th>
+                <th scope="col">date created</th>
+                <th scope="col">actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var url in Model)
+            {
+                <tr>
+                    <td>@url.Id</td>
+                    <td>@url.LongUrl</td>
+                    <td>@url.ShortUrl</td>
+                    <td>@url.TotalClicks</td>
+                    <td>@url.DateCreated.ToString("dd--MM--yyyy HH:mm")</td>
+                    <td>
+                        <a class="btn btn-outline-danger"
+                           asp-controller="Url"
+                           asp-action="DeleteUrl"
+                           asp-route-id="@url.Id">
+                            remove shortlink
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

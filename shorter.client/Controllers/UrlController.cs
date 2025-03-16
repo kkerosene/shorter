@@ -1,76 +1,145 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using shorter.client.Data;
 using shorter.client.Data.Models;
 using shorter.client.Data.ViewModels;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace shorter.client.Controllers
 {
-    public class UrlController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class UrlController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly AppDbContext _context;
+        private readonly ILogger<UrlController> _logger;
+
+        public UrlController(AppDbContext context, ILogger<UrlController> logger)
         {
-            var allUrls = new List<GetUrlVM>()
+            _context = context;
+            _logger = logger;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUrls()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var urls = await _context.Urls
+                .Where(u => u.UserId == userId)
+                .Select(u => new UrlVM
+                {
+                    Id = u.Id,
+                    LongUrl = u.LongUrl,
+                    ShortUrl = u.ShortUrl,
+                    TotalClicks = u.TotalClicks,
+                    DateCreated = u.DateCreated
+                })
+                .ToListAsync();
+
+            return Ok(urls);
+        }
+
+        [HttpGet("RedirectShortUrl")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RedirectShortUrl(string shortUrl)
+        {
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
+            if (url == null)
+                return NotFound();
+
+            url.TotalClicks++;
+            await _context.SaveChangesAsync();
+
+            return Redirect(url.LongUrl);  // Issues a 302 redirect to the long URL.
+        }
+
+        // Removed [ValidateAntiForgeryToken] for API simplicity.
+        [HttpPost("CreateUrl")]
+        public async Task<IActionResult> CreateUrl([FromBody] UrlCreateRequest request)
+        {
+            try
             {
-                new GetUrlVM()
+                if (string.IsNullOrWhiteSpace(request.Url) || !Uri.TryCreate(request.Url, UriKind.Absolute, out _))
+                    return new JsonResult(new { error = "Invalid URL format" });
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var existing = await _context.Urls
+                    .FirstOrDefaultAsync(u => u.LongUrl == request.Url && u.UserId == userId);
+
+                if (existing != null)
+                    return new JsonResult(new { error = "URL already exists" });
+
+                // Generate a unique short code.
+                string shortCode = await GenerateUniqueShortUrl();
+
+                // Create the new URL record.
+                var newUrl = new Url
                 {
-                    Id = 1,
-                    OriginalLink = "https://link1.com",
-                    ShortLink = "lman4",
-                    TotalClicks = 7,
-                    UserId = 3,
-                },
-                new GetUrlVM()
-                {
-                    Id = 2,
-                    OriginalLink = "https://link2.com",
-                    ShortLink = "j7tf",
+                    LongUrl = request.Url,
+                    ShortUrl = shortCode,
+                    UserId = userId,
                     TotalClicks = 0,
-                    UserId = 1,
-                },
-                new GetUrlVM()
+                    DateCreated = DateTime.UtcNow
+                };
+
+                _context.Urls.Add(newUrl);
+                await _context.SaveChangesAsync();
+
+                return new JsonResult(new UrlVM
                 {
-                    Id = 3,
-                    OriginalLink = "https://link3.com",
-                    ShortLink = "ku2e",
-                    TotalClicks = 16,
-                    UserId = 3,
-                }
-            };
-
-
-            return View(allUrls);
+                    Id = newUrl.Id,
+                    LongUrl = newUrl.LongUrl,
+                    ShortUrl = newUrl.ShortUrl,
+                    TotalClicks = newUrl.TotalClicks,
+                    DateCreated = newUrl.DateCreated
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating URL");
+                return StatusCode(500, new { error = "Internal server error" });
+            }
         }
 
-        public IActionResult Create()
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUrl(int id)
         {
-            /*
-                <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
 
-                <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                      <img src="..." class="rounded me-2" alt="...">
-                      <strong class="me-auto">Bootstrap</strong>
-                      <small>11 mins ago</small>
-                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                      Hello, world! This is a toast message.
-                    </div>
-                  </div>
-                </div>
+            var url = await _context.Urls
+                .FirstOrDefaultAsync(u => u.Id == id && (u.UserId == userId || isAdmin));
 
-             */
+            if (url == null)
+                return NotFound();
 
-            return RedirectToAction("Index");
+            _context.Urls.Remove(url);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        public IActionResult Remove(int id)
+        private async Task<string> GenerateUniqueShortUrl()
         {
-            return View();
-        }
-        public IActionResult Remove(int userId, int linkId)
-        {
-            return View();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            string shortUrl;
+
+            do
+            {
+                shortUrl = new string(Enumerable.Repeat(chars, 6)
+                    .Select(s => s[random.Next(s.Length)]).ToArray());
+            }
+            while (await _context.Urls.AnyAsync(u => u.ShortUrl == shortUrl));
+
+            return shortUrl;
         }
     }
 }

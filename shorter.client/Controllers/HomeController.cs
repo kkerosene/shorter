@@ -13,11 +13,18 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public IActionResult Index() => View(new UrlVM()
     {
-        var newUrl = new PostUrlVM();
+        Id = 0,
+        LongUrl = "", // Initialize required properties with default values
+        ShortUrl = "",
+        TotalClicks = 0,
+        DateCreated = DateTime.UtcNow
+    });
 
-        return View(newUrl);
+    public IActionResult About()
+    {
+        return View();
     }
 
     public IActionResult Shorten()
