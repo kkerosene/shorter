@@ -26,15 +26,16 @@
                             asp-action="Index">home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                            asp-area=""
-                            asp-controller="Url"
-                            asp-action="Index">all shortlinks</a>
+                            <a class="nav-link text-dark" 
+                            href="http://localhost:4200/shortlinks">all shortlinks</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Auth" asp-action="Users">users</a>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-success">(Admin)</span>
                             </li>
                         }
                         <li class="nav-item">
@@ -80,12 +81,12 @@
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="me-auto">URL Shortener</strong>
-                <small>Just now</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                <strong class="me-auto">short.er</strong>
+                <small>just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="close"></button>
             </div>
             <div class="toast-body">
-                Shortlink created successfully!
+                shortlink created successfully!
             </div>
         </div>
     </div>
