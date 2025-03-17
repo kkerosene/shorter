@@ -1,2 +1,38 @@
-﻿body {
+.container.mt-4 {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background-color: #2c2c2c;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  color: #f9f9f9;
+}
+
+table.table {
+  color: #f9f9f9;
+}
+
+  table.table thead th {
+    background-color: #404040;
+    color: #fff;
+    padding: 0.75rem;
+  }
+
+  table.table tbody tr:hover {
+    background-color: #505050;
+  }
+
+.btn-outline-danger {
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+.alert {
+  font-size: 1rem;
+  margin-top: 1rem;
 }
