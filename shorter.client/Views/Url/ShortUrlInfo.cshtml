@@ -1,0 +1,36 @@
+﻿@model shorter.client.Data.ViewModels.UrlVM
+
+@{
+    ViewData["Title"] = "shortlink info";
+}
+
+<div class="container mt-4">
+    <h2>shortlink info</h2>
+
+    <table class="table table-bordered mt-3">
+        <tbody>
+            <tr>
+                <th>original link:</th>
+                <td>
+                    <a href="@Model.LongUrl" target="_blank">@Model.LongUrl</a>
+                </td>
+            </tr>
+            <tr>
+                <th>shortlink:</th>
+                <td>
+                    <a href="@Model.ShortUrl" target="_blank">@Model.ShortUrl</a>
+                </td>
+            </tr>
+            <tr>
+                <th>no. of clicks:</th>
+                <td>@Model.TotalClicks</td>
+            </tr>
+            <tr>
+                <th>date created:</th>
+                <td>@Model.DateCreated.ToString("dd-MM-yyyy HH:mm")</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-secondary mt-3" href="http://localhost:4200/shortlinks">back to all shortlinks</a>
+</div>
