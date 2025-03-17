@@ -1,29 +1,66 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
 <div class="container mt-4">
-  <h2>All Shortlinks</h2>
-  <table class="table table-striped" *ngIf="shortlinks && shortlinks.length; else empty">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Original URL</th>
-        <th>Short URL</th>
-        <th>Total Clicks</th>
-        <th>Date Created</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let link of shortlinks">
-        <td>{{ link.id }}</td>
-        <td>{{ link.longUrl }}</td>
-        <td>
-          <!-- You might want to construct the full short URL here if needed -->
-          <a [href]="link.shortUrl" target="_blank">{{ link.shortUrl }}</a>
-        </td>
-        <td>{{ link.totalClicks }}</td>
-        <td>{{ link.dateCreated | date:'short' }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <ng-template #empty>
-    <p>No shortlinks available.</p>
-  </ng-template>
+  <h2>all shortlinks</h2>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>loading short links...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+    <button class="btn btn-sm btn-outline-secondary ms-3"
+            (click)="loadShortlinks()">
+      Retry
+    </button>
+  </div>
+
+  <!-- Data Display -->
+  <div *ngIf="!loading && !error">
+    <table *ngIf="shortlinks.length > 0" class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>original link</th>
+          <th>shortened link</th>
+          <th>clicks</th>
+          <th>created</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let link of shortlinks">
+          <td>{{ link.id }}</td>
+          <td class="text-truncate" style="max-width: 300px;">
+            {{ link.longUrl }}
+          </td>
+          <td>
+            <a [href]="'https://localhost:7161/api/Url/RedirectShortUrl?shortUrl=' + link.shortUrl"
+               target="_blank"
+               class="text-decoration-none">
+              {{ link.shortUrl }}
+            </a>
+          </td>
+          <td>{{ link.totalClicks }}</td>
+          <td>{{ link.dateCreated | date: 'medium' }}</td>
+          <td>
+            <button class="btn btn-outline-danger btn-sm"
+                    (click)="deleteShortlink(link.id)">
+              remove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="shortlinks.length === 0" class="alert alert-info">
+      no short links available. create your first one!
+    </div>
+  </div>
 </div>
