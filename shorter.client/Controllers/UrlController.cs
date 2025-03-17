@@ -14,7 +14,7 @@ namespace shorter.client.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UrlController : ControllerBase
+    public class UrlController : Controller
     {
         private readonly AppDbContext _context;
         private readonly ILogger<UrlController> _logger;
@@ -141,5 +141,28 @@ namespace shorter.client.Controllers
 
             return shortUrl;
         }
+        /*
+        
+        [HttpGet("ShortUrlInfo")]
+        public async Task<IActionResult> ShortUrlInfo(int id)
+        {
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.Id == id);
+            if (url == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new UrlVM
+            {
+                Id = url.Id,
+                LongUrl = url.LongUrl,
+                ShortUrl = url.ShortUrl,
+                TotalClicks = url.TotalClicks,
+                DateCreated = url.DateCreated
+            };
+
+            return View(viewModel); // Now available
+        }
+        */
     }
 }
