@@ -12,15 +12,19 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddCors(options =>
 {
+    /*
     options.AddPolicy("AllowAll",
          builder => builder.AllowAnyOrigin()
              .AllowAnyMethod()
              .AllowAnyHeader());
+    */
+
     options.AddPolicy("AllowAngularApp", policy =>
     {
         policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -55,7 +59,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 
-app.UseCors("AllowAll");
 app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
