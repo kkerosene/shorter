@@ -1,1 +1,153 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.Landing {
+  background-color: #f8f9fa; /* Light gray background */
+  min-height: 100vh; /* Full height */
+  display: flex;
+  align-items: center;
+}
+
+#space5p {
+  padding: 5px;
+}
+
+.form-header {
+  font-size: 24px;
+  font-weight: 600;
+  padding-bottom: 20px;
+}
+
+.form-group {
+  font-weight: 600;
+}
+
+/* Add this to your site's CSS file or in a <style> tag in your layout */
+.url-shorten-feature {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #bfbfbf;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.url-shorten-form {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.url-input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+  .url-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+.url-shorten-form button {
+  align-self: flex-start;
+  padding: 1rem 2rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+  .url-shorten-form button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+  }
+
+  .url-shorten-form button:active {
+    transform: translateY(1px);
+  }
+
+#shorten-alert {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Generated link styling */
+#generatedLink {
+  margin-top: 1.5rem;
+}
+
+  #generatedLink .input-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+#shortUrlText {
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+#copyButton {
+  padding: 0.8rem 1.5rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+  #copyButton:hover {
+    background: #1d4ed8;
+  }
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .url-shorten-feature {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .url-shorten-form {
+    flex-direction: column;
+  }
+
+    .url-shorten-form button {
+      width: 100%;
+      justify-content: center;
+    }
+}
